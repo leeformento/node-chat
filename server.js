@@ -12,6 +12,8 @@ server.use(express.json());
 server.use(express.static(__dirname))
 server.use(bodyParser.urlencoded({extended:false}))
 
+const dbUrl = 'mongodb://korina:tsinelas100@ds155073.mlab.com:55073/node-chat-lee'
+
 const messages = [
     {
         name: 'Lee',
@@ -35,6 +37,10 @@ server.post('/messages', (req, res) => {
 
 io.on('Connection', (socket) => {
     console.log('user connected')
+})
+
+mongoose.connect(dbUrl, {useNewUrlParser: true}, (err) => {
+    console.log('mongo db connection', err)
 })
 
 const port = 4000;
