@@ -43,11 +43,11 @@
         $("#messages").append(`<h4> ${message.name} </h4> <p> ${message.message} </p>`)
     }
     function getMessages() {
-        $.get('http://localhost:4000/messages', (data) => {
+        $.get('http://chika-chika.netlify.com/messages', (data) => {
             data.forEach(addMessage);
         })
     }
     function postMessage(message) {
-        $.post('http://localhost:4000/messages', message)
+        $.post('http://chika-chika.netlify.com/messages', message)
     }
 </script>
