@@ -26,27 +26,25 @@ server.get('/messages', (req, res) => {
     })
 })
 
-server.post('/messages', (req, res) => {
-    var message = new Message(req.body)
 
-    message.save()
-    .then(() => {
+server.post('/messages', async (req, res) => {
+    try {
+        const message = new Message(req.body)
+        const savedMessage = await message.save()
         console.log('saved')
-        return Message.findOne({message: 'badword'})
-    })
-    .then( censored => {
-        if(censored) {
-            console.log('censored words found', censored)
-            return Message.remove({_id: censored.id})
-        }
+        const censored = await Message.findOne({ message: 'badword' })
+        if (censored)
+            await Message.remove({ _id: censored.id })
+        else
         io.emit('message', req.body)
         res.sendStatus(200)
-    })
-    .catch((err) => {
+    } catch (error) {
         res.sendStatus(500)
-        return console.error(err)
-    })
-
+        return console.error(error)
+        //logger, shutdown a resource
+    } finally {
+        console.log('message post called')
+    }
 })
 
 io.on('Connection', (socket) => {
