@@ -5,6 +5,7 @@ const server = express();
 
 const http = require ('http').Server(server);
 const io = require('socket.io')(http);
+const mongoose = require('mongoose');
 
 server.use(express.json());
 // server.use(logger(`combined`));
