@@ -7,32 +7,46 @@ const http = require ('http').Server(server);
 const io = require('socket.io')(http);
 const mongoose = require('mongoose');
 
-server.use(express.json());
 // server.use(logger(`combined`));
 server.use(express.static(__dirname))
+server.use(bodyParser.json())
 server.use(bodyParser.urlencoded({extended:false}))
 
 const dbUrl = 'mongodb://korina:tsinelas100@ds155073.mlab.com:55073/node-chat-lee'
 
-const messages = [
-    {
-        name: 'Lee',
-        message: 'Nu nahh',
-    },
-    {
-        name: 'Marian',
-        message: 'Story op my layp',
-    }
-]
+//model. args ==== Model, schema
+const Message = mongoose.model('Message', {
+    name: String,
+    message: String
+})
 
 server.get('/messages', (req, res) => {
-    res.send(messages);
+    Message.find({}, (err, messages) => {
+        res.send(messages);
+    })
 })
 
 server.post('/messages', (req, res) => {
-    messages.push(req.body)
-    io.emit('message', req.body)
-    res.sendStatus(200)
+    var message = new Message(req.body)
+
+    message.save()
+    .then(() => {
+        console.log('saved')
+        return Message.findOne({message: 'badword'})
+    })
+    .then( censored => {
+        if(censored) {
+            console.log('censored words found', censored)
+            return Message.remove({_id: censored.id})
+        }
+        io.emit('message', req.body)
+        res.sendStatus(200)
+    })
+    .catch((err) => {
+        res.sendStatus(500)
+        return console.error(err)
+    })
+
 })
 
 io.on('Connection', (socket) => {
