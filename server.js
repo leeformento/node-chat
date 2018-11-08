@@ -55,5 +55,5 @@ mongoose.connect(dbUrl, {useNewUrlParser: true}, (err) => {
     console.log('mongo db connection', err)
 })
 
-const port = 4000;
+const port = process.env.PORT || 4000
 http.listen(port, () => console.log(`API running on port ${port}`))
