@@ -20,6 +20,7 @@ const Message = mongoose.model('Message', {
     message: String
 })
 
+// save
 server.get('/*',function(request,response,next){
     response.header('Access-Control-Allow-Origin' , 'http://lee-chat.herokuapp.com' );
     response.header('Access-Control-Allow-Credentials', true);
