@@ -32,6 +32,11 @@ server.post('/messages', async (req, res) => {
         const message = new Message(req.body)
         const savedMessage = message.save()
         console.log('saved')
+        const censored = await Message.findOne({ message: 'badword' })
+        if (censored)
+            await Message.remove({ _id: censored.id })
+        else
+        io.emit('message', req.body)
         res.sendStatus(200)
     } catch (error) {
         res.sendStatus(500)
