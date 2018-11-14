@@ -42,9 +42,7 @@ server.post('/messages', async (req, res) => {
         res.sendStatus(500)
         return console.error(error)
         //logger, shutdown a resource
-    } finally {
-        console.log('message post called')
-    }
+    } 
 })
 
 io.on('Connection', (socket) => {
